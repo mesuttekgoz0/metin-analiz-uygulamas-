@@ -48,13 +48,13 @@ def bul_ve_isaretle():
     text.insert(tk.END, temiz_metin)
 
 pencere = tk.Tk()
-pencere.title("Python Pencere")
+pencere.title("analiz uyguılaması")
 pencere.geometry("400x300")
 
 sekme_kontrol = ttk.Notebook(pencere)
 
 sekme1 = ttk.Frame(sekme_kontrol)
-sekme_kontrol.add(sekme1, text="Sekme 1")
+sekme_kontrol.add(sekme1, text="text işlem")
 
 text = tk.Text(sekme1,width=70,height=10)
 text.pack(fill=tk.BOTH, expand=1)
@@ -73,7 +73,7 @@ bul_isaretley_butonu = tk.Button(sekme1, text="Kelime Bul ve İşaretle", comman
 bul_isaretley_butonu.pack()
 
 sekme2 = ttk.Frame(sekme_kontrol)
-sekme_kontrol.add(sekme2, text="Sekme 2")
+sekme_kontrol.add(sekme2, text="benzerlik analizi")
 
 text1 = tk.Text(sekme2,width=30,height=2)
 text1.pack(fill=tk.BOTH, expand=0, pady=10)

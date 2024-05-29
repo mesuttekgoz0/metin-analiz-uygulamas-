@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import filedialog
 import string
 import Levenshtein
+import collections
 
 
 def dosya_sec(event):
@@ -58,15 +59,48 @@ def bul_ve_isaretle():
     text.delete("1.0", tk.END)
     text.insert(tk.END, temiz_metin)
 
+def analiz_et():
+    metin = text.get("1.0", tk.END)
+    kelimeler = metin.split()
+    kelime_sayisi = len(kelimeler)
+    kelime_sayisi_dict = collections.Counter(kelimeler)
+
+    # En çok geçen kelimeyi bul
+    en_cok_gecen_kelime = kelime_sayisi_dict.most_common(1)[0][0]
+    en_cok_gecen_kelime_sayisi = kelime_sayisi_dict.most_common(1)[0][1]
+
+    # En az geçen kelimeyi bul
+    en_az_gecen_kelime = kelime_sayisi_dict.most_common()[-1][0]
+    en_az_gecen_kelime_sayisi = kelime_sayisi_dict.most_common()[-1][1]
+
+    # Harf sayısını bul
+    harf_sayisi = sum(len(kelime) for kelime in kelimeler)
+
+    # Bilgileri yeni bir pencerede göster
+    bilgi_penceresi = tk.Toplevel(pencere)
+    bilgi_penceresi.title("En Çok ve En Az Geçen Kelimeler")
+    bilgi_penceresi.geometry("300x150")
+
+    en_cok_gecen_k_label = tk.Label(bilgi_penceresi, text=f"En Çok Geçen Kelime: {en_cok_gecen_kelime} ({en_cok_gecen_kelime_sayisi} kez)")
+    en_cok_gecen_k_label.pack(pady=10)
+    en_az_gecen_k_label = tk.Label(bilgi_penceresi, text=f"En Az Geçen Kelime: {en_az_gecen_kelime} ({en_az_gecen_kelime_sayisi} kez)")
+    en_az_gecen_k_label.pack()
+    kelime_sayisi_label = tk.Label(bilgi_penceresi, text=f"Toplam Kelime Sayısı: {kelime_sayisi}")
+    kelime_sayisi_label.pack(pady=10)
+    harf_sayisi_label = tk.Label(bilgi_penceresi, text=f"Toplam Harf Sayısı: {harf_sayisi}")
+    harf_sayisi_label.pack()
+
 
 pencere = tk.Tk()
 pencere.title("analiz uyguılaması")
-pencere.geometry("400x300")
+pencere.geometry("400x500")
+pencere.configure(bg="#242424")
 
 sekme_kontrol = ttk.Notebook(pencere)
 
 sekme1 = ttk.Frame(sekme_kontrol)
 sekme_kontrol.add(sekme1, text="text işlem")
+
 
 text = tk.Text(sekme1, width=70, height=10)
 text.pack(fill=tk.BOTH, expand=1)
@@ -81,8 +115,11 @@ temizle_buton.pack()
 kelime_giris = tk.Entry(sekme1)
 kelime_giris.pack()
 
-bul_isaretley_butonu = tk.Button(sekme1, text="Kelime Bul ve İşaretle", command=bul_ve_isaretle)
+bul_isaretley_butonu = tk.Button(sekme1, text="Kelime Bul ve İşaretle", command=bul_ve_isaretle,bg="light green")
 bul_isaretley_butonu.pack()
+
+text_analiz_buton= tk.Button(sekme1, text="analiz sonuçları",bg="light green",command=analiz_et)
+text_analiz_buton.pack()
 
 sekme2 = ttk.Frame(sekme_kontrol)
 sekme_kontrol.add(sekme2, text="benzerlik analizi")

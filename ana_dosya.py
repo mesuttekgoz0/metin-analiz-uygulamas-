@@ -44,19 +44,30 @@ def benzerlik_analizi():
 def bul_ve_isaretle():
     kelime = kelime_giris.get().strip()  # Giriş kutusundaki kelimeyi alır ve başındaki ve sonundaki boşlukları kaldırır
     metin = text.get("1.0", tk.END)
-    temiz_metin = metin
+    if not kelime:
+        messagebox.showinfo("Bilgi", "Lütfen bir kelime girin.")
+        return
 
-    if kelime:
-        kelime_baslangic = metin.find(kelime)
-        if kelime_baslangic != -1:
-            kelime_bitis = kelime_baslangic + len(kelime)
-            temiz_metin = temiz_metin[:kelime_baslangic] + f"[{kelime}]" + temiz_metin[kelime_bitis:]
-        else:
-            # Eğer kelime bulunamazsa bir uyarı mesajı göster
-            tk.messagebox.showinfo("Bilgi", "Aranan kelime metinde bulunamadı.")
+    # Önce mevcut işaretlemeleri temizle
+    text.tag_remove("highlight", "1.0", tk.END)
 
-    text.delete("1.0", tk.END)
-    text.insert(tk.END, temiz_metin)
+    # Kelimenin tüm geçişlerini bul ve işaretle
+    kelime_bulundu = False
+    baslangic = 1.0
+    while True:
+        baslangic = text.search(kelime, baslangic, stopindex=tk.END)
+        if not baslangic:
+            break
+        kelime_bulundu = True
+        bitis = f"{baslangic}+{len(kelime)}c"
+        text.tag_add("highlight", baslangic, bitis)
+        baslangic = bitis
+
+    if not kelime_bulundu:
+        messagebox.showinfo("Bilgi", "Aranan kelime metinde bulunamadı.")
+
+    # İşaretleme stilini ayarla
+    text.tag_config("highlight", background="yellow", foreground="black")
 
 
 pencere = tk.Tk()
@@ -98,7 +109,7 @@ analiz_butonu.pack()
 
 sekme_kontrol.pack(expand=1, fill="both")
 
-gereksiz_kelimeler = ["ve", "veya", "ama", "ise", "ile"]  # Gereksiz kelimeler listesi
+gereksiz_kelimeler = ["ve", "veya", "ama", "ise", "ile","birkaç","hem","ile","de","da","ya da"]  # Gereksiz kelimeler listesi
 
 pencere.mainloop()
 

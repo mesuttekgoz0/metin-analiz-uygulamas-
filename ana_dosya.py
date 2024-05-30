@@ -7,12 +7,13 @@ import Levenshtein
 import collections
 
 
-def dosya_sec(event):
+def dosya_sec(event, text_widget):
     dosya_yolu = filedialog.askopenfilename()
     if dosya_yolu:
         with open(dosya_yolu, 'r') as dosya:
             icerik = dosya.read()
-            text.insert(tk.END, icerik)
+            text_widget.delete("1.0", tk.END)
+            text_widget.insert(tk.END, icerik)
 
 
 def temizle():
@@ -37,10 +38,11 @@ def benzerlik_analizi():
     # Benzerlik oranını yeni bir pencerede göster
     benzerlik_penceresi = tk.Toplevel(pencere)
     benzerlik_penceresi.title("Benzerlik Analizi")
-    benzerlik_penceresi.geometry("200x100")
+    benzerlik_penceresi.geometry("300x150")
+    benzerlik_penceresi.configure(bg="#1e1e1e")
 
-    benzerlik_etiketi = tk.Label(benzerlik_penceresi, text=f"Benzerlik Oranı: %{yüzde:.2f}")
-    benzerlik_etiketi.pack(pady=20)
+    benzerlik_etiketi = tk.Label(benzerlik_penceresi, text=f"Benzerlik Oranı: %{yüzde:.2f}", fg="white", bg="#1e1e1e")
+    benzerlik_etiketi.pack(pady=40)
 
 
 def bul_ve_isaretle():
@@ -71,6 +73,7 @@ def bul_ve_isaretle():
     # İşaretleme stilini ayarla
     text.tag_config("highlight", background="yellow", foreground="black")
 
+
 def analiz_et():
     metin = text.get("1.0", tk.END)
     kelimeler = metin.split()
@@ -91,63 +94,70 @@ def analiz_et():
     # Bilgileri yeni bir pencerede göster
     bilgi_penceresi = tk.Toplevel(pencere)
     bilgi_penceresi.title("En Çok ve En Az Geçen Kelimeler")
-    bilgi_penceresi.geometry("300x150")
+    bilgi_penceresi.geometry("350x200")
+    bilgi_penceresi.configure(bg="#1e1e1e")
 
-    en_cok_gecen_k_label = tk.Label(bilgi_penceresi, text=f"En Çok Geçen Kelime: {en_cok_gecen_kelime} ({en_cok_gecen_kelime_sayisi} kez)")
+    en_cok_gecen_k_label = tk.Label(bilgi_penceresi, text=f"En Çok Geçen Kelime: {en_cok_gecen_kelime} ({en_cok_gecen_kelime_sayisi} kez)", fg="white", bg="#1e1e1e")
     en_cok_gecen_k_label.pack(pady=10)
-    en_az_gecen_k_label = tk.Label(bilgi_penceresi, text=f"En Az Geçen Kelime: {en_az_gecen_kelime} ({en_az_gecen_kelime_sayisi} kez)")
+    en_az_gecen_k_label = tk.Label(bilgi_penceresi, text=f"En Az Geçen Kelime: {en_az_gecen_kelime} ({en_az_gecen_kelime_sayisi} kez)", fg="white", bg="#1e1e1e")
     en_az_gecen_k_label.pack()
-    kelime_sayisi_label = tk.Label(bilgi_penceresi, text=f"Toplam Kelime Sayısı: {kelime_sayisi}")
+    kelime_sayisi_label = tk.Label(bilgi_penceresi, text=f"Toplam Kelime Sayısı: {kelime_sayisi}", fg="white", bg="#1e1e1e")
     kelime_sayisi_label.pack(pady=10)
-    harf_sayisi_label = tk.Label(bilgi_penceresi, text=f"Toplam Harf Sayısı: {harf_sayisi}")
+    harf_sayisi_label = tk.Label(bilgi_penceresi, text=f"Toplam Harf Sayısı: {harf_sayisi}", fg="white", bg="#1e1e1e")
     harf_sayisi_label.pack()
 
 
 pencere = tk.Tk()
-pencere.title("analiz uyguılaması")
-pencere.geometry("400x500")
-pencere.configure(bg="#242424")
+pencere.title("Analiz Uygulaması")
+pencere.geometry("500x600")
+pencere.configure(bg="#1e1e1e")
 
 sekme_kontrol = ttk.Notebook(pencere)
 
 sekme1 = ttk.Frame(sekme_kontrol)
-sekme_kontrol.add(sekme1, text="text işlem")
+sekme_kontrol.add(sekme1, text="Metin İşlem")
 
-
-text = tk.Text(sekme1, width=70, height=10)
+text = tk.Text(sekme1, width=70, height=10, bg="#f0f0f0")
 text.pack(fill=tk.BOTH, expand=1)
 
-doysa_yükle_butonu = tk.Button(sekme1, text="dosya yükle")
-doysa_yükle_butonu.pack()
-doysa_yükle_butonu.bind("<Button-1>", dosya_sec)
+doysa_yükle_butonu = tk.Button(sekme1, text="Dosya Yükle", bg="light blue")
+doysa_yükle_butonu.pack(pady=5)
+doysa_yükle_butonu.bind("<Button-1>", lambda event: dosya_sec(event, text))
 
-temizle_buton = tk.Button(sekme1, text="Temizle", command=temizle)
-temizle_buton.pack()
+temizle_buton = tk.Button(sekme1, text="Temizle", command=temizle, bg="light blue")
+temizle_buton.pack(pady=5)
 
 kelime_giris = tk.Entry(sekme1)
-kelime_giris.pack()
+kelime_giris.pack(pady=5)
 
-bul_isaretley_butonu = tk.Button(sekme1, text="Kelime Bul ve İşaretle", command=bul_ve_isaretle,bg="light green")
-bul_isaretley_butonu.pack()
+bul_isaretley_butonu = tk.Button(sekme1, text="Kelime Bul ve İşaretle", command=bul_ve_isaretle, bg="light green")
+bul_isaretley_butonu.pack(pady=5)
 
-text_analiz_buton= tk.Button(sekme1, text="analiz sonuçları",bg="light green",command=analiz_et)
-text_analiz_buton.pack()
+text_analiz_buton = tk.Button(sekme1, text="Analiz Sonuçları", command=analiz_et, bg="light green")
+text_analiz_buton.pack(pady=5)
 
 sekme2 = ttk.Frame(sekme_kontrol)
-sekme_kontrol.add(sekme2, text="benzerlik analizi")
+sekme_kontrol.add(sekme2, text="Benzerlik Analizi")
 
-text1 = tk.Text(sekme2, width=30, height=2)
-text1.pack(fill=tk.BOTH, expand=0, pady=10)
+text1 = tk.Text(sekme2, width=30, height=5, bg="#f0f0f0")
+text1.pack(fill=tk.BOTH, expand=1, pady=10, padx=10)
 
-text2 = tk.Text(sekme2, width=70, height=2)
-text2.pack(fill=tk.BOTH, expand=0, pady=30)
+dosya_yükle1_butonu = tk.Button(sekme2, text="Dosya Yükle", bg="light blue")
+dosya_yükle1_butonu.pack(pady=5)
+dosya_yükle1_butonu.bind("<Button-1>", lambda event: dosya_sec(event, text1))
 
-analiz_butonu = tk.Button(sekme2, text="Benzerliği Analiz Et", command=benzerlik_analizi)
-analiz_butonu.pack()
+text2 = tk.Text(sekme2, width=30, height=5, bg="#f0f0f0")
+text2.pack(fill=tk.BOTH, expand=1, pady=10, padx=10)
+
+dosya_yükle2_butonu = tk.Button(sekme2, text="Dosya Yükle", bg="light blue")
+dosya_yükle2_butonu.pack(pady=5)
+dosya_yükle2_butonu.bind("<Button-1>", lambda event: dosya_sec(event, text2))
+
+analiz_butonu = tk.Button(sekme2, text="Benzerliği Analiz Et", command=benzerlik_analizi, bg="light green")
+analiz_butonu.pack(pady=10)
 
 sekme_kontrol.pack(expand=1, fill="both")
 
-gereksiz_kelimeler = ["ve", "veya", "ama", "ise", "ile","birkaç","hem","ile","de","da","ya da"]  # Gereksiz kelimeler listesi
+gereksiz_kelimeler = ["ve", "veya", "ama", "ise", "ile", "birkaç", "hem", "de", "da", "ya da"]  # Gereksiz kelimeler listesi
 
 pencere.mainloop()
-

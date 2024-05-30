@@ -6,7 +6,7 @@ import string
 import Levenshtein
 import collections
 
-
+#buton komutları
 def dosya_sec(event, text_widget):
     dosya_yolu = filedialog.askopenfilename()
     if dosya_yolu:
@@ -37,7 +37,7 @@ def benzerlik_analizi():
 
     # Benzerlik oranını yeni bir pencerede göster
     benzerlik_penceresi = tk.Toplevel(pencere)
-    benzerlik_penceresi.title("Benzerlik Analizi")
+    benzerlik_penceresi.title("Be nzerlik Analizi")
     benzerlik_penceresi.geometry("300x150")
     benzerlik_penceresi.configure(bg="#1e1e1e")
 
@@ -106,7 +106,7 @@ def analiz_et():
     harf_sayisi_label = tk.Label(bilgi_penceresi, text=f"Toplam Harf Sayısı: {harf_sayisi}", fg="white", bg="#1e1e1e")
     harf_sayisi_label.pack()
 
-
+#arayüz
 pencere = tk.Tk()
 pencere.title("Analiz Uygulaması")
 pencere.geometry("500x600")
